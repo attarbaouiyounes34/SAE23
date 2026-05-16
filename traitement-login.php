@@ -17,6 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($userData) {
         loginUser($userData);
+        // Cookie lisible par JavaScript pour afficher le nom
+        setcookie('cb_user', $userData['user'], time() + 86400, '/');
+        setcookie('cb_role', $userData['role'], time() + 86400, '/');
         // Redirection selon le rôle
         if ($_SESSION['user_role'] === 'admin') {
             header('Location: admin.html');

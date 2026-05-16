@@ -46,7 +46,33 @@ document.addEventListener('DOMContentLoaded', function () {
     // Mettre à jour l'icône du thème
     var saved = localStorage.getItem('theme') || 'light';
     updateThemeIcon(saved);
+    // --- AFFICHER LE NOM DE L'UTILISATEUR CONNECTÉ ---
+    var cookies = document.cookie.split(';');
+    var username = '';
+    var userRole = '';
+    cookies.forEach(function (c) {
+        var parts = c.trim().split('=');
+        if (parts[0] === 'cb_user') username = decodeURIComponent(parts[1]);
+        if (parts[0] === 'cb_role') userRole = decodeURIComponent(parts[1]);
+    });
 
+    if (username) {
+        // Remplacer le bouton "Se connecter" par le badge utilisateur
+        var loginBtn = document.querySelector('.btn-login');
+        if (loginBtn) {
+            var badge = document.createElement('div');
+            badge.className = 'user-badge';
+            badge.innerHTML = '<span class="user-avatar">' + username.charAt(0).toUpperCase() + '</span>' +
+                '<span class="user-name">' + username + '</span>' +
+                '<a href="logout.php" class="btn-logout" title="Déconnexion">&#x2715;</a>';
+            loginBtn.replaceWith(badge);
+        }
+        // Mettre à jour les badges existants (mes-commandes, fidelite)
+        document.querySelectorAll('.user-name').forEach(function (el) { el.textContent = username; });
+        document.querySelectorAll('.user-avatar').forEach(function (el) {
+            if (!el.classList.contains('admin-avatar')) el.textContent = username.charAt(0).toUpperCase();
+        });
+    }
     // Alertes depuis l'URL
     var params = new URLSearchParams(window.location.search);
     if (params.get('success') === '1') showPageAlert('Compte créé avec succès ! Connectez-vous.', 'success');
