@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes commandes — Coffee Break</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
+                <span class="logo-sub">R&T Béziers</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Menu</a></li>
+                <li><a href="mes-commandes.html" class="active">Mes commandes</a></li>
+                <li><a href="fidelite.html">Fidélité</a></li>
+            </ul>
+            <div class="nav-right">
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <div class="user-badge"><span class="user-avatar">A</span><span class="user-name">alice</span><a
+                        href="login.html" class="btn-logout">&#x2715;</a></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="page-header">
+            <h1>Mes commandes</h1>
+            <p>Suivez l'état de vos commandes en temps réel</p>
+        </div>
+
+        <div class="order-card order-pending">
+            <div class="order-header">
+                <div><span class="order-id">#CMD-042</span><span class="order-date">11 mai 2026 — 10h35</span></div>
+                <span class="order-status status-pending">En attente</span>
+            </div>
+            <div class="order-body">
+                <div class="order-item"><span class="order-item-emoji">&#9749;</span>
+                    <div><strong>Cappuccino</strong><small>Lait, Sucre</small></div><span
+                        class="order-item-qty">x1</span><span class="order-item-price">0.80€</span>
+                </div>
+                <div class="order-item"><span class="order-item-emoji">&#129360;</span>
+                    <div><strong>Croissant</strong><small>—</small></div><span class="order-item-qty">x1</span><span
+                        class="order-item-price">0.70€</span>
+                </div>
+            </div>
+            <div class="order-footer"><span class="order-total">Total : 1.50€</span><button
+                    class="btn-cancel">Annuler</button></div>
+        </div>
+
+        <div class="order-card order-validated">
+            <div class="order-header">
+                <div><span class="order-id">#CMD-041</span><span class="order-date">10 mai 2026 — 14h20</span></div>
+                <span class="order-status status-validated">Validée</span>
+            </div>
+            <div class="order-body">
+                <div class="order-item"><span class="order-item-emoji">&#9749;</span>
+                    <div><strong>Expresso</strong><small>Double dose</small></div><span
+                        class="order-item-qty">x2</span><span class="order-item-price">1.00€</span>
+                </div>
+            </div>
+            <div class="order-footer"><span class="order-total">Total : 1.00€</span><span class="order-info">Préparation
+                    en cours...</span></div>
+        </div>
+
+        <div class="order-card order-served">
+            <div class="order-header">
+                <div><span class="order-id">#CMD-038</span><span class="order-date">9 mai 2026 — 09h15</span></div><span
+                    class="order-status status-served">Servie &#10003;</span>
+            </div>
+            <div class="order-body">
+                <div class="order-item"><span class="order-item-emoji">&#127861;</span>
+                    <div><strong>Thé vert</strong><small>Sucre</small></div><span class="order-item-qty">x1</span><span
+                        class="order-item-price">0.50€</span>
+                </div>
+                <div class="order-item"><span class="order-item-emoji">&#127850;</span>
+                    <div><strong>Cookie</strong><small>—</small></div><span class="order-item-qty">x2</span><span
+                        class="order-item-price">1.00€</span>
+                </div>
+            </div>
+            <div class="order-footer"><span class="order-total">Total : 1.50€</span><span class="order-info">+1 point
+                    fidélité gagné !</span></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><span>Coffee Break — R&T Béziers</span></div>
+            <p class="footer-copy">SAE23 — Application WEB &copy; 2025-2026<br>Younes ATTARBAOUI &amp; Maxime MAURA</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

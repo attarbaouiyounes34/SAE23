@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion — Coffee Break</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="page-login">
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
+                <span class="logo-sub">R&T Béziers</span>
+            </a>
+            <div class="nav-right">
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="login-wrapper">
+        <div class="login-visual">
+            <div class="login-visual-content">
+                <h2>Bienvenue<br>sur <em>Coffee Break</em></h2>
+                <p>Commandez vos boissons préférées<br>en quelques clics.</p>
+                <div class="login-features">
+                    <div class="login-feature"><span>&#9749;</span> Catalogue complet</div>
+                    <div class="login-feature"><span>&#9889;</span> Commande rapide</div>
+                    <div class="login-feature"><span>&#9733;</span> Points fidélité</div>
+                </div>
+            </div>
+        </div>
+        <div class="login-form-side">
+            <div class="login-card">
+                <h1>Connexion</h1>
+                <p class="login-subtitle">Entrez vos identifiants pour accéder à votre espace.</p>
+                <form method="POST" action="traitement-login.php">
+                    <div class="form-group">
+                        <label for="user">Utilisateur</label>
+                        <input type="text" id="user" name="user" placeholder="ex: alice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass">Mot de passe</label>
+                        <div class="input-password">
+                            <input type="password" id="pass" name="pass" placeholder="Votre mot de passe" required>
+                            <button type="button" class="toggle-pass"
+                                onclick="togglePassword('pass')">&#128065;</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Se connecter</button>
+                </form>
+                <p class="login-footer-text">Pas encore de compte ? <a href="register.html">Créer un compte</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function togglePassword(id) {
+            var input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+    </script>
+</body>
+
+</html>

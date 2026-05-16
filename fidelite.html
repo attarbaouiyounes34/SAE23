@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fidélité — Coffee Break</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
+                <span class="logo-sub">R&T Béziers</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Menu</a></li>
+                <li><a href="mes-commandes.html">Mes commandes</a></li>
+                <li><a href="fidelite.html" class="active">Fidélité</a></li>
+            </ul>
+            <div class="nav-right">
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <div class="user-badge"><span class="user-avatar">A</span><span class="user-name">alice</span><a
+                        href="login.html" class="btn-logout" title="Déconnexion">&#x2715;</a></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page-content fidelite-page">
+        <div class="page-header">
+            <h1>Programme fidélité</h1>
+            <p>Chaque commande servie vous rapporte des points</p>
+        </div>
+
+        <div class="fidelite-card">
+            <div class="fidelite-card-inner">
+                <div class="fidelite-card-header"><span>Coffee Break</span><span>Carte fidélité</span></div>
+                <div class="fidelite-name">alice</div>
+                <div class="fidelite-points-display"><span class="fidelite-pts-number">7</span><span
+                        class="fidelite-pts-label">points</span></div>
+                <div class="fidelite-progress">
+                    <div class="fidelite-bar">
+                        <div class="fidelite-bar-fill" style="width: 70%;"></div>
+                    </div>
+                    <span class="fidelite-bar-text">7 / 10 — plus que 3 pour une boisson offerte !</span>
+                </div>
+                <div class="fidelite-stamps">
+                    <span class="stamp filled">&#9749;</span><span class="stamp filled">&#9749;</span><span
+                        class="stamp filled">&#9749;</span>
+                    <span class="stamp filled">&#9749;</span><span class="stamp filled">&#9749;</span><span
+                        class="stamp filled">&#9749;</span>
+                    <span class="stamp filled">&#9749;</span><span class="stamp empty">&#9749;</span><span
+                        class="stamp empty">&#9749;</span>
+                    <span class="stamp gift">&#127873;</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="fidelite-rules">
+            <div class="rule-card"><span class="rule-icon">&#9749;</span>
+                <h3>Commandez</h3>
+                <p>Passez une commande depuis le menu</p>
+            </div>
+            <div class="rule-card"><span class="rule-icon">&#10003;</span>
+                <h3>Récupérez</h3>
+                <p>Votre commande est validée et servie</p>
+            </div>
+            <div class="rule-card"><span class="rule-icon">&#9733;</span>
+                <h3>Gagnez</h3>
+                <p>+1 point par commande servie</p>
+            </div>
+            <div class="rule-card"><span class="rule-icon">&#127873;</span>
+                <h3>Profitez</h3>
+                <p>10 points = 1 boisson gratuite</p>
+            </div>
+        </div>
+
+        <div class="fidelite-history">
+            <h2>Historique des points</h2>
+            <div class="history-list">
+                <div class="history-item"><span class="history-date">09/05/2026</span><span
+                        class="history-desc">Commande #038 servie</span><span class="history-pts positive">+1</span>
+                </div>
+                <div class="history-item"><span class="history-date">07/05/2026</span><span
+                        class="history-desc">Commande #035 servie</span><span class="history-pts positive">+1</span>
+                </div>
+                <div class="history-item"><span class="history-date">01/05/2026</span><span class="history-desc">Boisson
+                        offerte utilisée</span><span class="history-pts negative">-10</span></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><span>Coffee Break — R&T Béziers</span></div>
+            <p class="footer-copy">SAE23 — Application WEB &copy; 2025-2026<br>Younes ATTARBAOUI &amp; Maxime MAURA</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R&T Coffee Break</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
+                <span class="logo-sub">R&T Béziers</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Menu</a></li>
+                <li><a href="mes-commandes.html">Mes commandes</a></li>
+                <li><a href="fidelite.html">Fidélité</a></li>
+            </ul>
+            <div class="nav-right">
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <a href="login.html" class="btn-login">Se connecter</a>
+            </div>
+            <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-tag">Département R&T — IUT de Béziers</p>
+            <h1 class="hero-title">Votre pause café,<br><em>simplifiée.</em></h1>
+            <p class="hero-desc">Commandez vos boissons et snacks à l'avance.<br>Plus de queue, plus d'attente.</p>
+            <a href="#catalogue" class="btn-primary">Voir le menu &#8595;</a>
+        </div>
+    </header>
+
+    <section class="stats-bar">
+        <div class="stat"><span class="stat-number" id="statProduits">0</span><span class="stat-label">Produits</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-number" id="statCategories">0</span><span
+                class="stat-label">Catégories</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-number" id="statPrix">0€</span><span class="stat-label">À partir de</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-number">&#9733;</span><span class="stat-label">Points fidélité</span></div>
+    </section>
+
+    <section id="catalogue" class="catalogue">
+        <div class="section-header">
+            <h2>Notre carte</h2>
+            <p>Préparée avec soin pour votre pause</p>
+        </div>
+        <div class="filters" id="filtres"></div>
+        <div class="products-grid" id="grille">
+            <p>Chargement des produits...</p>
+        </div>
+    </section>
+
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeOrder()">&#x2715;</button>
+            <h2>Commander</h2>
+            <p id="modalProduct" class="modal-product"></p>
+            <div class="modal-form">
+                <div id="optionsContainer"></div>
+                <div id="slidersContainer"></div>
+                <label>Quantité :</label>
+                <div class="qty-control">
+                    <button onclick="changeQty(-1)">−</button>
+                    <span id="qtyValue">1</span>
+                    <button onclick="changeQty(1)">+</button>
+                </div>
+                <div class="modal-total">Total : <span id="modalTotal">0.00€</span></div>
+                <button class="btn-primary btn-confirm" onclick="confirmOrder()">Ajouter à ma commande</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Programme fidélité</h2>
+            <p>1 commande servie = 1 point.<br>10 points = 1 boisson offerte !</p>
+            <a href="register.html" class="btn-primary btn-light">Créer mon compte</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand"><span>Coffee Break — R&T Béziers</span></div>
+            <p class="footer-copy">SAE23 — Application WEB &copy; 2025-2026<br>Younes ATTARBAOUI &amp; Maxime MAURA</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"><span id="toastMsg"></span></div>
+    <script src="script.js"></script>
+</body>
+
+</html>

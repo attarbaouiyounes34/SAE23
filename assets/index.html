@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R&T Coffee Break</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ============ NAVIGATION ============ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">&#9749;</span>
+                <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
+                <span class="logo-sub">R&T Béziers</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Menu</a></li>
+                <li><a href="mes-commandes.html">Mes commandes</a></li>
+                <li><a href="fidelite.html">Fidélité</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="login.html" class="btn-login">Se connecter</a>
+                <!-- Affiché quand connecté (caché par défaut) -->
+                <div class="user-badge" style="display:none;">
+                    <span class="user-avatar">A</span>
+                    <span class="user-name">alice</span>
+                    <a href="#" class="btn-logout" title="Déconnexion">&#x2715;</a>
+                </div>
+            </div>
+            <button class="nav-burger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-tag">Département R&T — IUT de Béziers</p>
+            <h1 class="hero-title">Votre pause café,<br><em>simplifiée.</em></h1>
+            <p class="hero-desc">Commandez vos boissons et snacks à l'avance.<br>Plus de queue, plus d'attente.</p>
+            <a href="#catalogue" class="btn-primary">Voir le menu &#8595;</a>
+        </div>
+    </header>
+
+    <!-- ============ STATS BAR ============ -->
+    <section class="stats-bar">
+        <div class="stat">
+            <span class="stat-number">7</span>
+            <span class="stat-label">Produits</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-number">5</span>
+            <span class="stat-label">Options</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-number">1.00€</span>
+            <span class="stat-label">À partir de</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-number">&#9733;</span>
+            <span class="stat-label">Points fidélité</span>
+        </div>
+    </section>
+
+    <!-- ============ CATALOGUE ============ -->
+    <section id="catalogue" class="catalogue">
+        <div class="section-header">
+            <h2>Nos boissons</h2>
+            <p>Préparées avec soin pour votre pause</p>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterProducts('all')">Tout</button>
+            <button class="filter-btn" onclick="filterProducts('boisson')">Boissons</button>
+            <button class="filter-btn" onclick="filterProducts('snack')">Snacks</button>
+        </div>
+
+        <!-- Grille produits -->
+        <div class="products-grid">
+
+            <!-- Expresso -->
+            <div class="product-card" data-category="boisson">
+                <div class="product-img" style="background: linear-gradient(135deg, #3c1a0a, #6b3a2a);">
+                    <span class="product-emoji">&#9749;</span>
+                    <span class="product-badge">Populaire</span>
+                </div>
+                <div class="product-info">
+                    <h3>Expresso</h3>
+                    <p class="product-desc">Café court et intense</p>
+                    <div class="product-footer">
+                        <span class="product-price">1.00€</span>
+                        <button class="btn-add" onclick="openOrder('Expresso', 1.00)">Commander</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cappuccino -->
+            <div class="product-card" data-category="boisson">
+                <div class="product-img" style="background: linear-gradient(135deg, #5c3d2e, #a0755a);">
+                    <span class="product-emoji">&#9749;</span>
+                </div>
+                <div class="product-info">
+                    <h3>Cappuccino</h3>
+                    <p class="product-desc">Café avec mousse de lait</p>
+                    <div class="product-footer">
+                        <span class="product-price">1.50€</span>
+                        <button class="btn-add" onclick="openOrder('Cappuccino', 1.50)">Commander</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thé vert -->
+            <div class="product-card" data-category="boisson">
+                <div class="product-img" style="background: linear-gradient(135deg, #2d5016, #6a9f3a);">
+                    <span class="product-emoji">&#127861;</span>
+                </div>
+                <div class="product-info">
+                    <h3>Thé vert</h3>
+                    <p class="product-desc">Thé vert nature</p>
+                    <div class="product-footer">
+                        <span class="product-price">1.20€</span>
+                        <button class="btn-add" onclick="openOrder('Thé vert', 1.20)">Commander</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chocolat chaud -->
+            <div class="product-card" data-category="boisson">
+                <div class="product-img" style="background: linear-gradient(135deg, #2a1506, #5c3a1e);">
+                    <span class="product-emoji">&#127851;</span>
+                </div>
+                <div class="product-info">
+                    <h3>Chocolat chaud</h3>
+                    <p class="product-desc">Chocolat onctueux</p>
+                    <div class="product-footer">
+                        <span class="product-price">1.80€</span>
+                        <button class="btn-add" onclick="openOrder('Chocolat chaud', 1.80)">Commander</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cookie -->
+            <div class="product-card" data-category="snack">
+                <div class="product-img" style="background: linear-gradient(135deg, #8b6914, #d4a843);">
+                    <span class="product-emoji">&#127850;</span>
+                </div>
+                <div class="product-info">
+                    <h3>Cookie</h3>
+                    <p class="product-desc">Pépites de chocolat</p>
+                    <div class="product-footer">
+                        <span class="product-price">1.00€</span>
+                        <button class="btn-add" onclick="openOrder('Cookie', 1.00)">Commander</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Croissant -->
+            <div class="product-card" data-category="snack">
+                <div class="product-img" style="background: linear-gradient(135deg, #a07030, #dbb778);">
+                    <span class="product-emoji">&#129360;</span>
+                </div>
+                <div class="product-info">
+                    <h3>Croissant</h3>
+                    <p class="product-desc">Croissant pur beurre</p>
+                    <div class="product-footer">
+                        <span class="product-price">1.20€</span>
+                        <button class="btn-add" onclick="openOrder('Croissant', 1.20)">Commander</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Muffin -->
+            <div class="product-card" data-category="snack">
+                <div class="product-img" style="background: linear-gradient(135deg, #4a2660, #8a5aaf);">
+                    <span class="product-emoji">&#129473;</span>
+                </div>
+                <div class="product-info">
+                    <h3>Muffin</h3>
+                    <p class="product-desc">Muffin myrtilles</p>
+                    <div class="product-footer">
+                        <span class="product-price">1.50€</span>
+                        <button class="btn-add" onclick="openOrder('Muffin', 1.50)">Commander</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============ MODAL COMMANDE ============ -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeOrder()">&#x2715;</button>
+            <h2 id="modalTitle">Commander</h2>
+            <p id="modalProduct" class="modal-product"></p>
+
+            <div class="modal-form">
+                <label>Personnalisation :</label>
+                <div class="options-grid">
+                    <label class="option-check">
+                        <input type="checkbox" name="option" value="sucre" data-prix="0">
+                        <span class="option-label">Sucre <small>+0.00€</small></span>
+                    </label>
+                    <label class="option-check">
+                        <input type="checkbox" name="option" value="lait" data-prix="0.20">
+                        <span class="option-label">Lait <small>+0.20€</small></span>
+                    </label>
+                    <label class="option-check">
+                        <input type="checkbox" name="option" value="chantilly" data-prix="0.30">
+                        <span class="option-label">Chantilly <small>+0.30€</small></span>
+                    </label>
+                    <label class="option-check">
+                        <input type="checkbox" name="option" value="vanille" data-prix="0.40">
+                        <span class="option-label">Sirop vanille <small>+0.40€</small></span>
+                    </label>
+                    <label class="option-check">
+                        <input type="checkbox" name="option" value="double" data-prix="0.50">
+                        <span class="option-label">Double dose <small>+0.50€</small></span>
+                    </label>
+                </div>
+
+                <label for="quantite">Quantité :</label>
+                <div class="qty-control">
+                    <button onclick="changeQty(-1)">−</button>
+                    <span id="qtyValue">1</span>
+                    <button onclick="changeQty(1)">+</button>
+                </div>
+
+                <div class="modal-total">
+                    Total : <span id="modalTotal">0.00€</span>
+                </div>
+
+                <button class="btn-primary btn-confirm" onclick="confirmOrder()">Ajouter à ma commande</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ SECTION CTA ============ -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Programme fidélité</h2>
+            <p>1 commande servie = 1 point.<br>10 points = 1 boisson offerte !</p>
+            <a href="login.html" class="btn-primary btn-light">Créer mon compte</a>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="logo-icon">&#9749;</span>
+                <span>Coffee Break — R&T Béziers</span>
+            </div>
+            <p class="footer-copy">SAE23 — Application WEB &copy; 2025-2026<br>Younes ATTARBAOUI &amp; Max</p>
+        </div>
+    </footer>
+
+    <!-- ============ NOTIFICATION TOAST ============ -->
+    <div id="toast" class="toast">
+        <span id="toastMsg"></span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+

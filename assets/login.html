@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion — Coffee Break</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="page-login">
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">&#9749;</span>
+                <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
+                <span class="logo-sub">R&T Béziers</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="login-wrapper">
+        <div class="login-visual">
+            <div class="login-visual-content">
+                <h2>Bienvenue<br>sur <em>Coffee Break</em></h2>
+                <p>Commandez vos boissons préférées<br>en quelques clics.</p>
+                <div class="login-features">
+                    <div class="login-feature">
+                        <span>&#9749;</span> Catalogue complet
+                    </div>
+                    <div class="login-feature">
+                        <span>&#9889;</span> Commande rapide
+                    </div>
+                    <div class="login-feature">
+                        <span>&#9733;</span> Points fidélité
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-form-side">
+            <div class="login-card">
+                <h1>Connexion</h1>
+                <p class="login-subtitle">Entrez vos identifiants pour accéder à votre espace.</p>
+
+                <!-- Message d'erreur (caché par défaut) -->
+                <div id="loginError" class="alert alert-error" style="display:none;">
+                    Identifiant ou mot de passe incorrect.
+                </div>
+
+                <div class="form-group">
+                    <label for="user">Utilisateur</label>
+                    <input type="text" id="user" name="user" placeholder="ex: alice" autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pass">Mot de passe</label>
+                    <div class="input-password">
+                        <input type="password" id="pass" name="pass" placeholder="Votre mot de passe"
+                            autocomplete="current-password" required>
+                        <button type="button" class="toggle-pass" onclick="togglePassword()">&#128065;</button>
+                    </div>
+                </div>
+
+                <button class="btn-primary btn-full" onclick="handleLogin()">Se connecter</button>
+
+                <p class="login-footer-text">
+                    Pas encore de compte ? <a href="register.html">Créer un compte</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('pass');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('user').value.trim();
+            const pass = document.getElementById('pass').value.trim();
+
+            if (!user || !pass) {
+                showLoginError('Veuillez remplir tous les champs.');
+                return;
+            }
+
+            // Simulation — sera remplacé par un POST vers login.php
+            showLoginError('Identifiant ou mot de passe incorrect.');
+        }
+
+        function showLoginError(msg) {
+            const el = document.getElementById('loginError');
+            el.textContent = msg;
+            el.style.display = 'block';
+            el.classList.add('shake');
+            setTimeout(() => el.classList.remove('shake'), 500);
+        }
+    </script>
+</body>
+
+</html>
+button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
