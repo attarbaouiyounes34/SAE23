@@ -23,15 +23,12 @@
                 <li><a href="#" class="active" onclick="showTab('commandes')">Commandes</a></li>
                 <li><a href="#" onclick="showTab('produits')">Produits</a></li>
                 <li><a href="#" onclick="showTab('users')">Utilisateurs</a></li>
-                <li><a href="index.html">&#8592; Retour au site</a></li>
+                <li><a href="index.html">&#8592; Retour</a></li>
             </ul>
             <div class="nav-right">
                 <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
-                <div class="user-badge">
-                    <span class="user-avatar admin-avatar">&#9881;</span>
-                    <span class="user-name">admin</span>
-                    <a href="login.html" class="btn-logout" title="Déconnexion">&#x2715;</a>
-                </div>
+                <div class="user-badge"><span class="user-avatar admin-avatar">&#9881;</span><span
+                        class="user-name">admin</span><a href="logout.php" class="btn-logout">&#x2715;</a></div>
             </div>
         </div>
     </nav>
@@ -40,18 +37,8 @@
         <div id="tab-commandes" class="admin-tab">
             <div class="page-header">
                 <h1>Gestion des commandes</h1>
-                <p>Validez, servez ou supprimez les commandes</p>
             </div>
-            <div class="admin-stats">
-                <div class="admin-stat-card stat-pending"><span class="admin-stat-number">3</span><span
-                        class="admin-stat-label">En attente</span></div>
-                <div class="admin-stat-card stat-validated"><span class="admin-stat-number">2</span><span
-                        class="admin-stat-label">Validées</span></div>
-                <div class="admin-stat-card stat-served"><span class="admin-stat-number">28</span><span
-                        class="admin-stat-label">Servies</span></div>
-                <div class="admin-stat-card stat-total"><span class="admin-stat-number">42.60€</span><span
-                        class="admin-stat-label">Chiffre du jour</span></div>
-            </div>
+            <div class="admin-stats" id="adminStats"></div>
             <div class="admin-table-wrapper">
                 <table class="admin-table">
                     <thead>
@@ -65,40 +52,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>#042</strong></td>
-                            <td>alice</td>
-                            <td>Cappuccino, Croissant</td>
-                            <td>1.50€</td>
-                            <td>11/05 10h35</td>
-                            <td><span class="order-status status-pending">En attente</span></td>
-                            <td class="actions-cell"><button class="btn-action btn-validate"
-                                    title="Valider">&#10003;</button><button class="btn-action btn-delete"
-                                    title="Supprimer">&#128465;</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>#041</strong></td>
-                            <td>bob</td>
-                            <td>Expresso x2</td>
-                            <td>1.00€</td>
-                            <td>10/05 14h20</td>
-                            <td><span class="order-status status-validated">Validée</span></td>
-                            <td class="actions-cell"><button class="btn-action btn-serve"
-                                    title="Servir">&#9749;</button><button class="btn-action btn-delete"
-                                    title="Supprimer">&#128465;</button></td>
-                        </tr>
-                        <tr class="row-served">
-                            <td><strong>#038</strong></td>
-                            <td>alice</td>
-                            <td>Thé vert, Cookie x2</td>
-                            <td>1.50€</td>
-                            <td>09/05 09h15</td>
-                            <td><span class="order-status status-served">Servie</span></td>
-                            <td class="actions-cell"><button class="btn-action btn-delete"
-                                    title="Supprimer">&#128465;</button></td>
-                        </tr>
-                    </tbody>
+                    <tbody id="commandesBody"></tbody>
                 </table>
             </div>
         </div>
@@ -106,17 +60,16 @@
         <div id="tab-produits" class="admin-tab" style="display:none;">
             <div class="page-header">
                 <h1>Gestion des produits</h1>
-                <p>Ajoutez, modifiez ou supprimez des articles</p>
             </div>
             <button class="btn-primary" onclick="showProductForm()" style="margin-bottom:20px;">+ Ajouter un
                 produit</button>
             <div id="productForm" class="admin-form" style="display:none;">
                 <h3 id="productFormTitle">Nouveau produit</h3>
+                <input type="hidden" id="prod-id">
                 <div class="form-row">
-                    <div class="form-group"><label>Nom</label><input type="text" id="prod-nom"
-                            placeholder="Ex: Café Expresso"></div>
+                    <div class="form-group"><label>Nom</label><input type="text" id="prod-nom"></div>
                     <div class="form-group"><label>Prix (€)</label><input type="number" id="prod-prix" step="0.10"
-                            min="0" placeholder="0.50"></div>
+                            min="0"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label>Catégorie</label><select id="prod-cat">
@@ -126,19 +79,16 @@
                             <option>Pâtisseries</option>
                             <option>Salé</option>
                         </select></div>
-                    <div class="form-group"><label>Stock</label><input type="number" id="prod-stock" min="0"
-                            placeholder="50"></div>
+                    <div class="form-group"><label>Stock</label><input type="number" id="prod-stock" min="0"></div>
                 </div>
-                <div class="form-group"><label>Description</label><input type="text" id="prod-desc"
-                        placeholder="Description courte"></div>
-                <div class="form-group"><label>URL image</label><input type="text" id="prod-img"
-                        placeholder="https://..."></div>
+                <div class="form-group"><label>Description</label><input type="text" id="prod-desc"></div>
+                <div class="form-group"><label>URL image</label><input type="text" id="prod-img"></div>
                 <div class="form-actions"><button class="btn-primary"
                         onclick="saveProduct()">Enregistrer</button><button class="btn-cancel"
                         onclick="hideProductForm()">Annuler</button></div>
             </div>
             <div class="admin-table-wrapper">
-                <table class="admin-table" id="produitsTable">
+                <table class="admin-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -158,7 +108,6 @@
         <div id="tab-users" class="admin-tab" style="display:none;">
             <div class="page-header">
                 <h1>Gestion des utilisateurs</h1>
-                <p>Consultez et gérez les comptes</p>
             </div>
             <div class="admin-table-wrapper">
                 <table class="admin-table">
@@ -172,36 +121,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>admin</td>
-                            <td>admin@rt-coffee.fr</td>
-                            <td><span class="badge-admin">Admin</span></td>
-                            <td>—</td>
-                            <td class="actions-cell">—</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>alice</td>
-                            <td>alice@etudiant.fr</td>
-                            <td>Utilisateur</td>
-                            <td>7</td>
-                            <td class="actions-cell"><button class="btn-action btn-validate"
-                                    title="Modifier">&#9998;</button><button class="btn-action btn-delete"
-                                    title="Supprimer">&#128465;</button></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>bob</td>
-                            <td>bob@etudiant.fr</td>
-                            <td>Utilisateur</td>
-                            <td>3</td>
-                            <td class="actions-cell"><button class="btn-action btn-validate"
-                                    title="Modifier">&#9998;</button><button class="btn-action btn-delete"
-                                    title="Supprimer">&#128465;</button></td>
-                        </tr>
-                    </tbody>
+                    <tbody id="usersBody"></tbody>
                 </table>
             </div>
         </div>
@@ -221,21 +141,124 @@
             document.getElementById('tab-' + name).style.display = 'block';
             document.querySelectorAll('.nav-links a').forEach(function (a) { a.classList.remove('active'); });
             event.target.classList.add('active');
-            if (name === 'produits') loadProduitsAdmin();
+            if (name === 'commandes') { loadStats(); loadCommandes(); }
+            if (name === 'produits') loadProduits();
+            if (name === 'users') loadUsers();
         }
-        function showProductForm() { document.getElementById('productForm').style.display = 'block'; }
+
+        // --- STATS ---
+        function loadStats() {
+            fetch('api-admin.php?action=stats').then(function (r) { return r.json(); }).then(function (d) {
+                document.getElementById('adminStats').innerHTML =
+                    '<div class="admin-stat-card stat-pending"><span class="admin-stat-number">' + d.en_attente + '</span><span class="admin-stat-label">En attente</span></div>' +
+                    '<div class="admin-stat-card stat-validated"><span class="admin-stat-number">' + d.validees + '</span><span class="admin-stat-label">Validées</span></div>' +
+                    '<div class="admin-stat-card stat-served"><span class="admin-stat-number">' + d.servies + '</span><span class="admin-stat-label">Servies</span></div>' +
+                    '<div class="admin-stat-card stat-total"><span class="admin-stat-number">' + d.chiffre_jour.toFixed(2) + '€</span><span class="admin-stat-label">Chiffre du jour</span></div>';
+            });
+        }
+
+        // --- COMMANDES ---
+        function loadCommandes() {
+            fetch('api-admin.php?action=commandes').then(function (r) { return r.json(); }).then(function (d) {
+                document.getElementById('commandesBody').innerHTML = d.commandes.map(function (c) {
+                    var items = c.items.map(function (i) { return i.nom + (i.quantite > 1 ? ' x' + i.quantite : ''); }).join(', ');
+                    var date = new Date(c.date_commande);
+                    var dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    var statut = c.statut === 'en_attente' ? '<span class="order-status status-pending">En attente</span>' :
+                        c.statut === 'validee' ? '<span class="order-status status-validated">Validée</span>' :
+                            c.statut === 'servie' ? '<span class="order-status status-served">Servie</span>' :
+                                '<span class="order-status">Annulée</span>';
+                    var actions = '';
+                    if (c.statut === 'en_attente') actions += '<button class="btn-action btn-validate" onclick="adminAction(\'valider_commande\',' + c.id + ')">&#10003;</button>';
+                    if (c.statut === 'validee') actions += '<button class="btn-action btn-serve" onclick="adminAction(\'servir_commande\',' + c.id + ')">&#9749;</button>';
+                    actions += '<button class="btn-action btn-delete" onclick="adminAction(\'supprimer_commande\',' + c.id + ')">&#128465;</button>';
+                    return '<tr><td><strong>#' + String(c.id).padStart(3, '0') + '</strong></td><td>' + c.username + '</td><td>' + items + '</td><td>' + c.total.toFixed(2) + '€</td><td>' + dateStr + '</td><td>' + statut + '</td><td class="actions-cell">' + actions + '</td></tr>';
+                }).join('');
+            });
+        }
+
+        // --- PRODUITS ---
+        function loadProduits() {
+            fetch('api-admin.php?action=produits').then(function (r) { return r.json(); }).then(function (d) {
+                document.getElementById('produitsBody').innerHTML = d.produits.map(function (p) {
+                    return '<tr><td>' + p.id + '</td><td><img src="' + p.image + '" style="width:50px;height:35px;object-fit:cover;border-radius:4px;" onerror="this.style.display=\'none\'"></td><td><strong>' + p.nom + '</strong></td><td>' + p.categorie + '</td><td>' + p.prix.toFixed(2) + '€</td><td>' + p.stock + '</td><td class="actions-cell"><button class="btn-action btn-validate" onclick="editProduct(' + p.id + ',\'' + p.nom.replace(/'/g, "\\'") + '\',' + p.prix + ',\'' + p.categorie + '\',' + p.stock + ',\'' + p.description.replace(/'/g, "\\'") + '\',\'' + p.image + '\')">&#9998;</button><button class="btn-action btn-delete" onclick="adminAction(\'supprimer_produit\',' + p.id + ')">&#128465;</button></td></tr>';
+                }).join('');
+            });
+        }
+
+        // --- UTILISATEURS ---
+        function loadUsers() {
+            fetch('api-admin.php?action=users').then(function (r) { return r.json(); }).then(function (d) {
+                document.getElementById('usersBody').innerHTML = d.users.map(function (u) {
+                    var role = u.role === 'admin' ? '<span class="badge-admin">Admin</span>' : 'Utilisateur';
+                    var actions = u.role === 'admin' ? '—' : '<button class="btn-action btn-delete" onclick="adminAction(\'supprimer_user\',' + u.id + ')">&#128465;</button>';
+                    return '<tr><td>' + u.id + '</td><td>' + u.user + '</td><td>' + u.mail + '</td><td>' + role + '</td><td>' + u.points_fidelite + '</td><td class="actions-cell">' + actions + '</td></tr>';
+                }).join('');
+            });
+        }
+
+        // --- ACTION ADMIN ---
+        function adminAction(action, id) {
+            if (action.indexOf('supprimer') !== -1 && !confirm('Confirmer la suppression ?')) return;
+            fetch('traitement-admin.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: action, id: id })
+            }).then(function (r) { return r.json(); }).then(function (d) {
+                if (d.succes) { loadStats(); loadCommandes(); loadProduits(); loadUsers(); }
+                else alert(d.erreur || 'Erreur');
+            });
+        }
+
+        // --- FORMULAIRE PRODUIT ---
+        function showProductForm() {
+            document.getElementById('productForm').style.display = 'block';
+            document.getElementById('productFormTitle').textContent = 'Nouveau produit';
+            document.getElementById('prod-id').value = '';
+            document.getElementById('prod-nom').value = '';
+            document.getElementById('prod-prix').value = '';
+            document.getElementById('prod-stock').value = '';
+            document.getElementById('prod-desc').value = '';
+            document.getElementById('prod-img').value = '';
+        }
         function hideProductForm() { document.getElementById('productForm').style.display = 'none'; }
-        function saveProduct() { hideProductForm(); alert('Produit enregistré (simulation)'); }
-        function loadProduitsAdmin() {
-            fetch('api-produits.php')
-                .then(function (r) { return r.json(); })
-                .then(function (data) {
-                    var body = document.getElementById('produitsBody');
-                    body.innerHTML = data.produits.map(function (p) {
-                        return '<tr><td>' + p.id + '</td><td><img src="' + p.image + '" style="width:50px;height:35px;object-fit:cover;border-radius:4px;" onerror="this.style.display=\'none\'"></td><td><strong>' + p.nom + '</strong></td><td>' + p.categorie + '</td><td>' + p.prix.toFixed(2) + '€</td><td>' + p.stock + '</td><td class="actions-cell"><button class="btn-action btn-validate" title="Modifier">&#9998;</button><button class="btn-action btn-delete" title="Supprimer">&#128465;</button></td></tr>';
-                    }).join('');
-                });
+
+        function editProduct(id, nom, prix, cat, stock, desc, img) {
+            document.getElementById('productForm').style.display = 'block';
+            document.getElementById('productFormTitle').textContent = 'Modifier produit #' + id;
+            document.getElementById('prod-id').value = id;
+            document.getElementById('prod-nom').value = nom;
+            document.getElementById('prod-prix').value = prix;
+            document.getElementById('prod-cat').value = cat;
+            document.getElementById('prod-stock').value = stock;
+            document.getElementById('prod-desc').value = desc;
+            document.getElementById('prod-img').value = img;
         }
+
+        function saveProduct() {
+            var id = document.getElementById('prod-id').value;
+            var data = {
+                action: id ? 'modifier_produit' : 'ajouter_produit',
+                id: id || null,
+                nom: document.getElementById('prod-nom').value,
+                prix: parseFloat(document.getElementById('prod-prix').value),
+                categorie: document.getElementById('prod-cat').value,
+                stock: parseInt(document.getElementById('prod-stock').value),
+                description: document.getElementById('prod-desc').value,
+                image: document.getElementById('prod-img').value
+            };
+            fetch('traitement-admin.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(function (r) { return r.json(); }).then(function (d) {
+                if (d.succes) { hideProductForm(); loadProduits(); }
+                else alert(d.erreur || 'Erreur');
+            });
+        }
+
+        // Charger au démarrage
+        document.addEventListener('DOMContentLoaded', function () { loadStats(); loadCommandes(); });
     </script>
 </body>
 
