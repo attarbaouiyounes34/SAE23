@@ -26,8 +26,7 @@
             </ul>
             <div class="nav-right">
                 <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
-                <div class="user-badge"><span class="user-avatar">A</span><span class="user-name">alice</span><a
-                        href="login.html" class="btn-logout">&#x2715;</a></div>
+                <a href="login.html" class="btn-login">Se connecter</a>
             </div>
         </div>
     </nav>
@@ -37,58 +36,8 @@
             <h1>Mes commandes</h1>
             <p>Suivez l'état de vos commandes en temps réel</p>
         </div>
-
-        <div class="order-card order-pending">
-            <div class="order-header">
-                <div><span class="order-id">#CMD-042</span><span class="order-date">11 mai 2026 — 10h35</span></div>
-                <span class="order-status status-pending">En attente</span>
-            </div>
-            <div class="order-body">
-                <div class="order-item"><span class="order-item-emoji">&#9749;</span>
-                    <div><strong>Cappuccino</strong><small>Lait, Sucre</small></div><span
-                        class="order-item-qty">x1</span><span class="order-item-price">0.80€</span>
-                </div>
-                <div class="order-item"><span class="order-item-emoji">&#129360;</span>
-                    <div><strong>Croissant</strong><small>—</small></div><span class="order-item-qty">x1</span><span
-                        class="order-item-price">0.70€</span>
-                </div>
-            </div>
-            <div class="order-footer"><span class="order-total">Total : 1.50€</span><button
-                    class="btn-cancel">Annuler</button></div>
-        </div>
-
-        <div class="order-card order-validated">
-            <div class="order-header">
-                <div><span class="order-id">#CMD-041</span><span class="order-date">10 mai 2026 — 14h20</span></div>
-                <span class="order-status status-validated">Validée</span>
-            </div>
-            <div class="order-body">
-                <div class="order-item"><span class="order-item-emoji">&#9749;</span>
-                    <div><strong>Expresso</strong><small>Double dose</small></div><span
-                        class="order-item-qty">x2</span><span class="order-item-price">1.00€</span>
-                </div>
-            </div>
-            <div class="order-footer"><span class="order-total">Total : 1.00€</span><span class="order-info">Préparation
-                    en cours...</span></div>
-        </div>
-
-        <div class="order-card order-served">
-            <div class="order-header">
-                <div><span class="order-id">#CMD-038</span><span class="order-date">9 mai 2026 — 09h15</span></div><span
-                    class="order-status status-served">Servie &#10003;</span>
-            </div>
-            <div class="order-body">
-                <div class="order-item"><span class="order-item-emoji">&#127861;</span>
-                    <div><strong>Thé vert</strong><small>Sucre</small></div><span class="order-item-qty">x1</span><span
-                        class="order-item-price">0.50€</span>
-                </div>
-                <div class="order-item"><span class="order-item-emoji">&#127850;</span>
-                    <div><strong>Cookie</strong><small>—</small></div><span class="order-item-qty">x2</span><span
-                        class="order-item-price">1.00€</span>
-                </div>
-            </div>
-            <div class="order-footer"><span class="order-total">Total : 1.50€</span><span class="order-info">+1 point
-                    fidélité gagné !</span></div>
+        <div id="commandesContainer">
+            <p>Chargement des commandes...</p>
         </div>
     </main>
 
@@ -98,7 +47,71 @@
             <p class="footer-copy">SAE23 — Application WEB &copy; 2025-2026<br>Younes ATTARBAOUI &amp; Maxime MAURA</p>
         </div>
     </footer>
+
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('api-commandes.php')
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var container = document.getElementById('commandesContainer');
+                    if (data.erreur) {
+                        container.innerHTML = '<p>Connectez-vous pour voir vos commandes. <a href="login.html">Se connecter</a></p>';
+                        return;
+                    }
+                    if (data.commandes.length === 0) {
+                        container.innerHTML = '<p>Aucune commande pour le moment. <a href="index.html">Voir le menu</a></p>';
+                        return;
+                    }
+                    container.innerHTML = data.commandes.map(function (cmd) {
+                        var statusClass = 'status-pending';
+                        var statusText = 'En attente';
+                        if (cmd.statut === 'validee') { statusClass = 'status-validated'; statusText = 'Validée'; }
+                        if (cmd.statut === 'servie') { statusClass = 'status-served'; statusText = 'Servie ✓'; }
+                        if (cmd.statut === 'annulee') { statusClass = 'status-pending'; statusText = 'Annulée'; }
+
+                        var date = new Date(cmd.date_commande);
+                        var dateStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) + ' — ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+                        var itemsHtml = cmd.items.map(function (item) {
+                            return '<div class="order-item">' +
+                                '<div><strong>' + item.nom + '</strong></div>' +
+                                '<span class="order-item-qty">x' + item.quantite + '</span>' +
+                                '<span class="order-item-price">' + (parseFloat(item.prix_unitaire) * item.quantite).toFixed(2) + '€</span>' +
+                                '</div>';
+                        }).join('');
+
+                        var footerExtra = '';
+                        if (cmd.statut === 'en_attente') footerExtra = '<button class="btn-cancel" onclick="annulerCommande(' + cmd.id + ')">Annuler</button>';
+                        if (cmd.statut === 'validee') footerExtra = '<span class="order-info">Préparation en cours...</span>';
+                        if (cmd.statut === 'servie') footerExtra = '<span class="order-info">+1 point fidélité gagné !</span>';
+
+                        return '<div class="order-card">' +
+                            '<div class="order-header"><div><span class="order-id">#CMD-' + String(cmd.id).padStart(3, '0') + '</span><span class="order-date">' + dateStr + '</span></div><span class="order-status ' + statusClass + '">' + statusText + '</span></div>' +
+                            '<div class="order-body">' + itemsHtml + '</div>' +
+                            '<div class="order-footer"><span class="order-total">Total : ' + cmd.total.toFixed(2) + '€</span>' + footerExtra + '</div>' +
+                            '</div>';
+                    }).join('');
+                })
+                .catch(function () {
+                    document.getElementById('commandesContainer').innerHTML = '<p>Erreur de chargement. <a href="login.html">Se connecter</a></p>';
+                });
+        });
+
+        function annulerCommande(id) {
+            if (!confirm('Annuler cette commande ?')) return;
+            fetch('traitement-annuler.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_id: id })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.succes) location.reload();
+                    else alert(data.erreur || 'Erreur');
+                });
+        }
+    </script>
 </body>
 
 </html>
