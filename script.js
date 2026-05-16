@@ -269,8 +269,66 @@ function updateTotal() {
 }
 
 function confirmOrder() {
-    closeOrder();
-    showToast(currentProduct.nom + ' ajouté à votre commande !');
+    // Vérifier si connecté (cookie)
+    var cookies = document.cookie.split(';');
+    var username = '';
+    cookies.forEach(function (c) {
+        var parts = c.trim().split('=');
+        if (parts[0] === 'cb_user') username = decodeURIComponent(parts[1]);
+    });
+
+    if (!username) {
+        closeOrder();
+        showToast('Connectez-vous pour commander !');
+        setTimeout(function () { window.location.href = 'login.html'; }, 1500);
+        return;
+    }
+
+    // Récupérer les options cochées
+    var optionsChoisies = [];
+    document.querySelectorAll('#optionsContainer input[type="checkbox"]:checked').forEach(function (cb) {
+        optionsChoisies.push(cb.value);
+    });
+
+    // Récupérer les suppléments
+    var supplements = 0;
+    document.querySelectorAll('#optionsContainer input[type="checkbox"]:checked').forEach(function (cb) {
+        supplements += parseFloat(cb.dataset.prix) || 0;
+    });
+
+    // Récupérer les doses
+    var doseCafe = document.getElementById('sliderCafe') ? document.getElementById('sliderCafe').value : null;
+    var doseSucre = document.getElementById('sliderSucre') ? document.getElementById('sliderSucre').value : null;
+    var doseLait = document.getElementById('sliderLait') ? document.getElementById('sliderLait').value : null;
+
+    var commandeData = {
+        product_id: currentProduct.id,
+        quantite: currentQty,
+        supplements: supplements,
+        options: optionsChoisies,
+        dose_cafe: doseCafe,
+        dose_sucre: doseSucre,
+        dose_lait: doseLait
+    };
+
+    fetch('traitement-commande.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(commandeData)
+    })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            closeOrder();
+            if (data.succes) {
+                showToast(currentProduct.nom + ' commandé ! Total : ' + data.total.toFixed(2) + '€');
+            } else {
+                showToast('Erreur : ' + (data.erreur || 'commande échouée'));
+            }
+        })
+        .catch(function () {
+            closeOrder();
+            showToast('Erreur de connexion au serveur');
+        });
 }
 
 // --- TOAST ---
