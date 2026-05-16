@@ -283,3 +283,46 @@ function showToast(message) {
         setTimeout(function () { toast.classList.remove('show'); }, 3000);
     }
 }
+// --- BARRE DE RECHERCHE ---
+function rechercherProduit() {
+    var recherche = document.getElementById('searchInput').value.toLowerCase().trim();
+    var grille = document.getElementById('grille');
+    if (!grille) return;
+
+    var produits;
+    if (recherche === '') {
+        produits = categorieActive === 'Tous'
+            ? tousLesProduits
+            : tousLesProduits.filter(function (p) { return p.categorie === categorieActive; });
+    } else {
+        produits = tousLesProduits.filter(function (p) {
+            return p.nom.toLowerCase().indexOf(recherche) !== -1 ||
+                p.description.toLowerCase().indexOf(recherche) !== -1 ||
+                p.categorie.toLowerCase().indexOf(recherche) !== -1;
+        });
+    }
+
+    grille.innerHTML = '';
+    produits.forEach(function (p) {
+        var card = document.createElement('div');
+        card.className = 'product-card' + (!p.disponible ? ' indisponible' : '');
+        card.innerHTML =
+            '<div class="product-img-wrap">' +
+            '<img src="' + p.image + '" alt="' + p.nom + '" class="product-img" onerror="this.style.display=\'none\'">' +
+            '<span class="badge-categorie">' + p.categorie + '</span>' +
+            (!p.disponible ? '<span class="badge-rupture">Rupture</span>' : '') +
+            (p.stock > 0 && p.stock <= 10 ? '<span class="badge-stock-bas">Plus que ' + p.stock + '</span>' : '') +
+            '</div>' +
+            '<div class="product-info">' +
+            '<h3>' + p.nom + '</h3>' +
+            '<p class="product-desc">' + p.description + '</p>' +
+            '<div class="product-footer">' +
+            '<span class="product-price">' + p.prix.toFixed(2) + '€</span>' +
+            (p.disponible ? '<button class="btn-add" data-id="' + p.id + '">Commander</button>' : '<span class="btn-disabled">Indisponible</span>') +
+            '</div>' +
+            '</div>';
+        var btn = card.querySelector('.btn-add');
+        if (btn) btn.addEventListener('click', function () { openOrder(p); });
+        grille.appendChild(card);
+    });
+}
