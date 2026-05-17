@@ -9,16 +9,164 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
+  <style>
+    .profil-banner {
+      background: linear-gradient(135deg, var(--coffee-700), var(--coffee-900));
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 24px;
+      color: var(--coffee-50);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profil-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('assets/vecteezy_light-coffee-break-ambiance_28216975.jpg') center/cover;
+      opacity: 0.15;
+    }
+
+    .profil-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--coffee-300);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 700;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+    }
+
+    .profil-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profil-info {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+    }
+
+    .profil-info h2 {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+
+    .profil-info p {
+      color: var(--coffee-200);
+      font-size: 14px;
+    }
+
+    .profil-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .profil-stat {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+    }
+
+    .profil-stat-number {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--coffee-300);
+      display: block;
+    }
+
+    .profil-stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--coffee-200);
+    }
+
+    .profil-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .profil-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid rgba(160, 112, 74, 0.08);
+    }
+
+    [data-theme="dark"] .profil-card {
+      background: #2a2a2a;
+      border-color: #3a3a3a;
+    }
+
+    .profil-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+
+    .profil-photo-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      margin: 0 auto 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--text-muted);
+    }
+
+    .profil-photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 768px) {
+      .profil-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profil-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profil-stats {
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
   <nav class="navbar">
     <div class="nav-container">
-      <a href="index.html" class="logo">
-        <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
-        <span class="logo-sub">R&T Béziers</span>
-      </a>
+      <a href="index.html" class="logo"><span class="logo-text">Coffee <span
+            class="logo-accent">Break</span></span><span class="logo-sub">R&T Béziers</span></a>
       <ul class="nav-links">
         <li><a href="index.html">Menu</a></li>
         <li><a href="mes-commandes.html">Mes commandes</a></li>
@@ -31,12 +179,7 @@
     </div>
   </nav>
 
-  <main class="page-content">
-    <div class="page-header">
-      <h1>Mon profil</h1>
-      <p>Gérez vos informations personnelles</p>
-    </div>
-
+  <main class="page-content" style="max-width:900px;">
     <div id="profilContainer">
       <p>Chargement...</p>
     </div>
@@ -51,74 +194,115 @@
 
   <script src="script.js"></script>
   <script>
+    var userData = null;
+
     document.addEventListener('DOMContentLoaded', function () {
       fetch('api-profil.php')
         .then(function (r) { return r.json(); })
         .then(function (u) {
           if (u.erreur) { document.getElementById('profilContainer').innerHTML = '<p>Connectez-vous. <a href="login.html">Se connecter</a></p>'; return; }
-
+          userData = u;
           var date = new Date(u.created_at);
           var dateStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
           var initiale = u.user.charAt(0).toUpperCase();
+          var avatarContent = u.photo_url ? '<img src="' + u.photo_url + '" onerror="this.style.display=\'none\';this.parentNode.textContent=\'' + initiale + '\'">' : initiale;
 
           document.getElementById('profilContainer').innerHTML =
-            '<div style="text-align:center;margin-bottom:32px;">' +
-            '<div style="width:80px;height:80px;border-radius:50%;background:var(--coffee-300);color:white;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin:0 auto 12px;">' + initiale + '</div>' +
-            '<h2 style="font-size:24px;">' + u.user + '</h2>' +
-            '<p style="color:var(--text-muted);font-size:14px;">Membre depuis le ' + dateStr + '</p>' +
-            '<div style="display:flex;justify-content:center;gap:32px;margin-top:16px;">' +
-            '<div style="text-align:center;"><span style="font-size:24px;font-weight:700;color:var(--coffee-600);">' + u.points_fidelite + '</span><br><span style="font-size:12px;color:var(--text-muted);">Points</span></div>' +
-            '<div style="text-align:center;"><span style="font-size:24px;font-weight:700;color:var(--coffee-600);">' + u.total_commandes + '</span><br><span style="font-size:12px;color:var(--text-muted);">Commandes</span></div>' +
+            '<div class="profil-banner">' +
+            '<div class="profil-avatar" id="bannerAvatar">' + avatarContent + '</div>' +
+            '<div class="profil-info">' +
+            '<h2>' + u.user + '</h2>' +
+            '<p>' + u.mail + ' — Membre depuis le ' + dateStr + '</p>' +
+            '<div class="profil-stats">' +
+            '<div class="profil-stat"><span class="profil-stat-number">' + u.points_fidelite + '</span><span class="profil-stat-label">Points</span></div>' +
+            '<div class="profil-stat"><span class="profil-stat-number">' + u.total_commandes + '</span><span class="profil-stat-label">Commandes</span></div>' +
+            '<div class="profil-stat"><span class="profil-stat-number">' + (u.role === 'admin' ? 'Admin' : 'User') + '</span><span class="profil-stat-label">Rôle</span></div>' +
+            '</div>' +
             '</div>' +
             '</div>' +
 
-            '<div style="background:white;border-radius:var(--radius);padding:24px;border:1px solid rgba(160,112,74,0.08);margin-bottom:20px;">' +
-            '<h3 style="margin-bottom:16px;">Informations personnelles</h3>' +
+            '<div class="profil-grid">' +
+            '<div class="profil-card">' +
+            '<h3>Informations personnelles</h3>' +
             '<div id="infoMsg"></div>' +
             '<div class="form-group"><label>Nom d\'utilisateur</label><input type="text" id="profil-user" value="' + u.user + '"></div>' +
             '<div class="form-group"><label>Email</label><input type="email" id="profil-mail" value="' + u.mail + '"></div>' +
             '<button class="btn-primary" onclick="updateInfo()">Enregistrer</button>' +
             '</div>' +
 
-            '<div style="background:white;border-radius:var(--radius);padding:24px;border:1px solid rgba(160,112,74,0.08);">' +
-            '<h3 style="margin-bottom:16px;">Changer le mot de passe</h3>' +
+            '<div class="profil-card">' +
+            '<h3>Photo de profil</h3>' +
+            '<div class="profil-photo-preview" id="photoPreview">' + avatarContent + '</div>' +
+            '<form action="upload-photo.php" method="POST" enctype="multipart/form-data">' +
+            '<div class="form-group"><label>Choisir une photo</label><input type="file" name="photo" accept="image/jpeg,image/png,image/webp" style="width:100%;padding:10px;border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);font-family:var(--font);"></div>' +
+            '<button type="submit" class="btn-primary">Enregistrer la photo</button>' +
+            '</form>' +
+            '</div>' +
+
+            '<div class="profil-card">' +
+            '<h3>Changer le mot de passe</h3>' +
             '<div id="passMsg"></div>' +
             '<div class="form-group"><label>Ancien mot de passe</label><input type="password" id="profil-oldpass"></div>' +
             '<div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="profil-newpass" placeholder="Minimum 6 caractères"></div>' +
-            '<button class="btn-primary" onclick="updatePassword()">Modifier le mot de passe</button>' +
+            '<button class="btn-primary" onclick="updatePassword()">Modifier</button>' +
+            '</div>' +
+
+            '<div class="profil-card">' +
+            '<h3>Actions</h3>' +
+            '<p style="color:var(--text-muted);margin-bottom:16px;">Gérez votre compte</p>' +
+            '<a href="mes-commandes.html" class="btn-primary" style="display:block;text-align:center;margin-bottom:12px;">Mes commandes</a>' +
+            '<a href="fidelite.html" class="btn-primary btn-light" style="display:block;text-align:center;margin-bottom:12px;">Programme fidélité</a>' +
+            '<button class="btn-cancel" style="width:100%;margin-top:8px;" onclick="if(confirm(\'Supprimer votre compte ?\'))deleteAccount()">Supprimer mon compte</button>' +
+            '</div>' +
             '</div>';
         });
     });
 
+    function previewPhoto() {
+      var url = document.getElementById('profil-photo').value;
+      var preview = document.getElementById('photoPreview');
+      if (url) preview.innerHTML = '<img src="' + url + '" onerror="this.parentNode.textContent=\'?\'">';
+      else preview.textContent = userData ? userData.user.charAt(0).toUpperCase() : '?';
+    }
+
+    function updatePhoto() {
+      fetch('api-profil.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_photo', photo_url: document.getElementById('profil-photo').value.trim() })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d.succes) location.reload();
+        else alert(d.erreur || 'Erreur');
+      });
+    }
+
     function updateInfo() {
       fetch('api-profil.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'update_info',
-          user: document.getElementById('profil-user').value.trim(),
-          mail: document.getElementById('profil-mail').value.trim()
-        })
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_info', user: document.getElementById('profil-user').value.trim(), mail: document.getElementById('profil-mail').value.trim() })
       }).then(function (r) { return r.json(); }).then(function (d) {
         var msg = document.getElementById('infoMsg');
-        if (d.succes) { msg.innerHTML = '<div class="alert alert-success">Profil mis à jour !</div>'; location.reload(); }
+        if (d.succes) { msg.innerHTML = '<div class="alert alert-success">Profil mis à jour !</div>'; setTimeout(function () { location.reload(); }, 1000); }
         else msg.innerHTML = '<div class="alert alert-error">' + d.erreur + '</div>';
       });
     }
 
     function updatePassword() {
       fetch('api-profil.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'update_password',
-          old_pass: document.getElementById('profil-oldpass').value,
-          new_pass: document.getElementById('profil-newpass').value
-        })
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_password', old_pass: document.getElementById('profil-oldpass').value, new_pass: document.getElementById('profil-newpass').value })
       }).then(function (r) { return r.json(); }).then(function (d) {
         var msg = document.getElementById('passMsg');
         if (d.succes) { msg.innerHTML = '<div class="alert alert-success">Mot de passe modifié !</div>'; document.getElementById('profil-oldpass').value = ''; document.getElementById('profil-newpass').value = ''; }
         else msg.innerHTML = '<div class="alert alert-error">' + d.erreur + '</div>';
+      });
+    }
+
+    function deleteAccount() {
+      fetch('api-profil.php', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete_account' })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d.succes) window.location.href = 'logout.php';
       });
     }
   </script>

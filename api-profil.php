@@ -21,6 +21,15 @@ if ($method === 'GET') {
     $stats = $stmt2->fetch();
     $user['total_commandes'] = intval($stats['total']);
     echo json_encode($user, JSON_UNESCAPED_UNICODE);
+    } elseif ($action === 'update_photo') {
+            $stmt = $pdo->prepare("UPDATE users SET photo_url = :url WHERE id = :id");
+            $stmt->execute(['url' => $data['photo_url'], 'id' => $_SESSION['user_id']]);
+            echo json_encode(['succes' => true]);
+
+        } elseif ($action === 'delete_account') {
+            $stmt = $pdo->prepare("UPDATE users SET deleted_at = NOW() WHERE id = :id");
+            $stmt->execute(['id' => $_SESSION['user_id']]);
+            echo json_encode(['succes' => true]);
 }
 
 if ($method === 'POST') {
