@@ -1934,3 +1934,15 @@ img {
     border-color: #3a3a3a;
     color: #e0d5cc;
 }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-content,
+.admin-page,
+.catalogue {
+    flex: 1;
+}

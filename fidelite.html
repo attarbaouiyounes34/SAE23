@@ -26,8 +26,7 @@
             </ul>
             <div class="nav-right">
                 <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
-                <div class="user-badge"><span class="user-avatar">A</span><span class="user-name">alice</span><a
-                        href="login.html" class="btn-logout" title="Déconnexion">&#x2715;</a></div>
+                <a href="login.html" class="btn-login">Se connecter</a>
             </div>
         </div>
     </nav>
@@ -38,28 +37,8 @@
             <p>Chaque commande servie vous rapporte des points</p>
         </div>
 
-        <div class="fidelite-card">
-            <div class="fidelite-card-inner">
-                <div class="fidelite-card-header"><span>Coffee Break</span><span>Carte fidélité</span></div>
-                <div class="fidelite-name">alice</div>
-                <div class="fidelite-points-display"><span class="fidelite-pts-number">7</span><span
-                        class="fidelite-pts-label">points</span></div>
-                <div class="fidelite-progress">
-                    <div class="fidelite-bar">
-                        <div class="fidelite-bar-fill" style="width: 70%;"></div>
-                    </div>
-                    <span class="fidelite-bar-text">7 / 10 — plus que 3 pour une boisson offerte !</span>
-                </div>
-                <div class="fidelite-stamps">
-                    <span class="stamp filled">&#9749;</span><span class="stamp filled">&#9749;</span><span
-                        class="stamp filled">&#9749;</span>
-                    <span class="stamp filled">&#9749;</span><span class="stamp filled">&#9749;</span><span
-                        class="stamp filled">&#9749;</span>
-                    <span class="stamp filled">&#9749;</span><span class="stamp empty">&#9749;</span><span
-                        class="stamp empty">&#9749;</span>
-                    <span class="stamp gift">&#127873;</span>
-                </div>
-            </div>
+        <div id="fideliteContainer">
+            <p>Chargement...</p>
         </div>
 
         <div class="fidelite-rules">
@@ -81,19 +60,7 @@
             </div>
         </div>
 
-        <div class="fidelite-history">
-            <h2>Historique des points</h2>
-            <div class="history-list">
-                <div class="history-item"><span class="history-date">09/05/2026</span><span
-                        class="history-desc">Commande #038 servie</span><span class="history-pts positive">+1</span>
-                </div>
-                <div class="history-item"><span class="history-date">07/05/2026</span><span
-                        class="history-desc">Commande #035 servie</span><span class="history-pts positive">+1</span>
-                </div>
-                <div class="history-item"><span class="history-date">01/05/2026</span><span class="history-desc">Boisson
-                        offerte utilisée</span><span class="history-pts negative">-10</span></div>
-            </div>
-        </div>
+        <div id="historiqueContainer"></div>
     </main>
 
     <footer class="footer">
@@ -102,7 +69,63 @@
             <p class="footer-copy">SAE23 — Application WEB &copy; 2025-2026<br>Younes ATTARBAOUI &amp; Maxime MAURA</p>
         </div>
     </footer>
+
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('api-fidelite.php')
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.erreur) {
+                        document.getElementById('fideliteContainer').innerHTML = '<p>Connectez-vous pour voir vos points. <a href="login.html">Se connecter</a></p>';
+                        return;
+                    }
+
+                    var pts = data.points;
+                    var ptsModulo = pts % 10;
+                    var restant = 10 - ptsModulo;
+                    var pourcent = (ptsModulo / 10) * 100;
+
+                    // Stamps
+                    var stamps = '';
+                    for (var i = 0; i < 9; i++) {
+                        stamps += i < ptsModulo
+                            ? '<span class="stamp filled">&#9749;</span>'
+                            : '<span class="stamp empty">&#9749;</span>';
+                    }
+                    stamps += '<span class="stamp gift">&#127873;</span>';
+
+                    document.getElementById('fideliteContainer').innerHTML =
+                        '<div class="fidelite-card"><div class="fidelite-card-inner">' +
+                        '<div class="fidelite-card-header"><span>Coffee Break</span><span>Carte fidélité</span></div>' +
+                        '<div class="fidelite-name">' + data.user + '</div>' +
+                        '<div class="fidelite-points-display"><span class="fidelite-pts-number">' + pts + '</span><span class="fidelite-pts-label">points</span></div>' +
+                        '<div class="fidelite-progress">' +
+                        '<div class="fidelite-bar"><div class="fidelite-bar-fill" style="width:' + pourcent + '%;"></div></div>' +
+                        '<span class="fidelite-bar-text">' + ptsModulo + ' / 10 — plus que ' + restant + ' pour une boisson offerte !</span>' +
+                        '</div>' +
+                        '<div class="fidelite-stamps">' + stamps + '</div>' +
+                        '</div></div>';
+
+                    // Historique
+                    if (data.historique.length > 0) {
+                        var histHtml = '<h2>Historique des points</h2><div class="history-list">';
+                        data.historique.forEach(function (h) {
+                            var date = new Date(h.date_commande);
+                            var dateStr = date.toLocaleDateString('fr-FR');
+                            if (h.statut === 'servie') {
+                                histHtml += '<div class="history-item"><span class="history-date">' + dateStr + '</span><span class="history-desc">Commande #' + String(h.id).padStart(3, '0') + ' servie</span><span class="history-pts positive">+1</span></div>';
+                            }
+                        });
+                        histHtml += '</div>';
+                        document.getElementById('historiqueContainer').innerHTML = histHtml;
+                    }
+                })
+                .catch(function () {
+                    document.getElementById('fideliteContainer').innerHTML = '<p>Connectez-vous pour voir vos points. <a href="login.html">Se connecter</a></p>';
+                });
+        });
+    </script>
 </body>
 
 </html>
