@@ -62,8 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (loginBtn) {
             var badge = document.createElement('div');
             badge.className = 'user-badge';
-            badge.innerHTML = '<span class="user-avatar">' + username.charAt(0).toUpperCase() + '</span>' +
-                '<span class="user-name">' + username + '</span>' +
+            badge.innerHTML = '<a href="profil.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;"><span class="user-avatar">' + username.charAt(0).toUpperCase() + '</span><span class="user-name">' + username + '</span></a><a href="logout.php" class="btn-logout" title="Déconnexion">&#x2715;</a>';
+            '<span class="user-name">' + username + '</span>' +
                 '<a href="logout.php" class="btn-logout" title="Déconnexion">&#x2715;</a>';
             loginBtn.replaceWith(badge);
         }

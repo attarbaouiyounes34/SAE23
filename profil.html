@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon profil — Coffee Break</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-text">Coffee <span class="logo-accent">Break</span></span>
+        <span class="logo-sub">R&T Béziers</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Menu</a></li>
+        <li><a href="mes-commandes.html">Mes commandes</a></li>
+        <li><a href="fidelite.html">Fidélité</a></li>
+      </ul>
+      <div class="nav-right">
+        <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        <a href="login.html" class="btn-login">Se connecter</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-content">
+    <div class="page-header">
+      <h1>Mon profil</h1>
+      <p>Gérez vos informations personnelles</p>
+    </div>
+
+    <div id="profilContainer">
+      <p>Chargement...</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand"><span>Coffee Break — R&T Béziers</span></div>
+      <p class="footer-copy">SAE23 — Application WEB &copy; 2025-2026<br>Younes ATTARBAOUI &amp; Maxime MAURA</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('api-profil.php')
+        .then(function (r) { return r.json(); })
+        .then(function (u) {
+          if (u.erreur) { document.getElementById('profilContainer').innerHTML = '<p>Connectez-vous. <a href="login.html">Se connecter</a></p>'; return; }
+
+          var date = new Date(u.created_at);
+          var dateStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+          var initiale = u.user.charAt(0).toUpperCase();
+
+          document.getElementById('profilContainer').innerHTML =
+            '<div style="text-align:center;margin-bottom:32px;">' +
+            '<div style="width:80px;height:80px;border-radius:50%;background:var(--coffee-300);color:white;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin:0 auto 12px;">' + initiale + '</div>' +
+            '<h2 style="font-size:24px;">' + u.user + '</h2>' +
+            '<p style="color:var(--text-muted);font-size:14px;">Membre depuis le ' + dateStr + '</p>' +
+            '<div style="display:flex;justify-content:center;gap:32px;margin-top:16px;">' +
+            '<div style="text-align:center;"><span style="font-size:24px;font-weight:700;color:var(--coffee-600);">' + u.points_fidelite + '</span><br><span style="font-size:12px;color:var(--text-muted);">Points</span></div>' +
+            '<div style="text-align:center;"><span style="font-size:24px;font-weight:700;color:var(--coffee-600);">' + u.total_commandes + '</span><br><span style="font-size:12px;color:var(--text-muted);">Commandes</span></div>' +
+            '</div>' +
+            '</div>' +
+
+            '<div style="background:white;border-radius:var(--radius);padding:24px;border:1px solid rgba(160,112,74,0.08);margin-bottom:20px;">' +
+            '<h3 style="margin-bottom:16px;">Informations personnelles</h3>' +
+            '<div id="infoMsg"></div>' +
+            '<div class="form-group"><label>Nom d\'utilisateur</label><input type="text" id="profil-user" value="' + u.user + '"></div>' +
+            '<div class="form-group"><label>Email</label><input type="email" id="profil-mail" value="' + u.mail + '"></div>' +
+            '<button class="btn-primary" onclick="updateInfo()">Enregistrer</button>' +
+            '</div>' +
+
+            '<div style="background:white;border-radius:var(--radius);padding:24px;border:1px solid rgba(160,112,74,0.08);">' +
+            '<h3 style="margin-bottom:16px;">Changer le mot de passe</h3>' +
+            '<div id="passMsg"></div>' +
+            '<div class="form-group"><label>Ancien mot de passe</label><input type="password" id="profil-oldpass"></div>' +
+            '<div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="profil-newpass" placeholder="Minimum 6 caractères"></div>' +
+            '<button class="btn-primary" onclick="updatePassword()">Modifier le mot de passe</button>' +
+            '</div>';
+        });
+    });
+
+    function updateInfo() {
+      fetch('api-profil.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update_info',
+          user: document.getElementById('profil-user').value.trim(),
+          mail: document.getElementById('profil-mail').value.trim()
+        })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        var msg = document.getElementById('infoMsg');
+        if (d.succes) { msg.innerHTML = '<div class="alert alert-success">Profil mis à jour !</div>'; location.reload(); }
+        else msg.innerHTML = '<div class="alert alert-error">' + d.erreur + '</div>';
+      });
+    }
+
+    function updatePassword() {
+      fetch('api-profil.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update_password',
+          old_pass: document.getElementById('profil-oldpass').value,
+          new_pass: document.getElementById('profil-newpass').value
+        })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        var msg = document.getElementById('passMsg');
+        if (d.succes) { msg.innerHTML = '<div class="alert alert-success">Mot de passe modifié !</div>'; document.getElementById('profil-oldpass').value = ''; document.getElementById('profil-newpass').value = ''; }
+        else msg.innerHTML = '<div class="alert alert-error">' + d.erreur + '</div>';
+      });
+    }
+  </script>
+</body>
+
+</html>
