@@ -1,0 +1,30 @@
+# Empêcher l'accès aux fichiers sensibles
+<FilesMatch "\.(php|sql|log)$">
+    # Les fichiers PHP sont exécutés, pas téléchargés (déjà le cas par défaut)
+</FilesMatch>
+
+# Bloquer l'accès direct aux logs
+<Files "security.log">
+    Require all denied
+</Files>
+
+# Bloquer l'accès au fichier de config
+<Files "config-db.php">
+    Require all denied
+</Files>
+
+# Bloquer l'accès au SQL
+<Files "coffee_break.sql">
+    Require all denied
+</Files>
+
+# Empêcher le listing des répertoires
+Options -Indexes
+
+# Protection des headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

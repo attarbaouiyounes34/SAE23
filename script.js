@@ -42,6 +42,7 @@ var currentProduct = null;
 var currentQty = 1;
 
 // --- DOMContentLoaded ---
+if (params.get('error') === 'bloque') showPageAlert('Trop de tentatives. Réessayez dans 15 minutes.', 'error');
 document.addEventListener('DOMContentLoaded', function () {
     // Mettre à jour l'icône du thème
     var saved = localStorage.getItem('theme') || 'light';
@@ -57,21 +58,57 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     if (username) {
-        // Remplacer le bouton "Se connecter" par le badge utilisateur
-        var loginBtn = document.querySelector('.btn-login');
-        if (loginBtn) {
-            var badge = document.createElement('div');
-            badge.className = 'user-badge';
-            badge.innerHTML = '<a href="profil.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;"><span class="user-avatar">' + username.charAt(0).toUpperCase() + '</span><span class="user-name">' + username + '</span></a><a href="logout.php" class="btn-logout" title="Déconnexion">&#x2715;</a>';
-            '<span class="user-name">' + username + '</span>' +
-                '<a href="logout.php" class="btn-logout" title="Déconnexion">&#x2715;</a>';
-            loginBtn.replaceWith(badge);
-        }
-        // Mettre à jour les badges existants (mes-commandes, fidelite)
-        document.querySelectorAll('.user-name').forEach(function (el) { el.textContent = username; });
-        document.querySelectorAll('.user-avatar').forEach(function (el) {
-            if (!el.classList.contains('admin-avatar')) el.textContent = username.charAt(0).toUpperCase();
-        });
+        // Récupérer la photo de profil depuis l'API
+        fetch('api-profil.php')
+            .then(function (r) { return r.json(); })
+            .then(function (u) {
+                var avatarHtml = '';
+                if (u.photo_url && u.photo_url !== '') {
+                    avatarHtml = '<img src="' + u.photo_url + '" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">';
+                } else {
+                    avatarHtml = username.charAt(0).toUpperCase();
+                }
+
+                var loginBtn = document.querySelector('.btn-login');
+                if (loginBtn) {
+                    var badge = document.createElement('div');
+                    badge.className = 'user-badge';
+                    badge.innerHTML = '<a href="profil.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;"><span class="user-avatar" style="overflow:hidden;">' + avatarHtml + '</span><span class="user-name">' + username + '</span></a><a href="logout.php" class="btn-logout" title="Déconnexion">&#x2715;</a>';
+                    loginBtn.replaceWith(badge);
+                }
+
+                // Mettre à jour les badges existants
+                document.querySelectorAll('.user-name').forEach(function (el) { el.textContent = username; });
+                document.querySelectorAll('.user-avatar').forEach(function (el) {
+                    if (!el.classList.contains('admin-avatar')) {
+                        if (u.photo_url && u.photo_url !== '') {
+                            el.innerHTML = '<img src="' + u.photo_url + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+                        } else {
+                            el.textContent = username.charAt(0).toUpperCase();
+                        }
+                    }
+                });
+
+                // Lien admin si rôle admin
+                if (userRole === 'admin') {
+                    var navLinks = document.querySelector('.nav-links');
+                    if (navLinks) {
+                        var li = document.createElement('li');
+                        li.innerHTML = '<a href="admin.html" style="color:var(--accent);font-weight:700;">Admin</a>';
+                        navLinks.appendChild(li);
+                    }
+                }
+            })
+            .catch(function () {
+                // Fallback si l'API ne répond pas
+                var loginBtn = document.querySelector('.btn-login');
+                if (loginBtn) {
+                    var badge = document.createElement('div');
+                    badge.className = 'user-badge';
+                    badge.innerHTML = '<a href="profil.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;"><span class="user-avatar">' + username.charAt(0).toUpperCase() + '</span><span class="user-name">' + username + '</span></a><a href="logout.php" class="btn-logout" title="Déconnexion">&#x2715;</a>';
+                    loginBtn.replaceWith(badge);
+                }
+            });
     }
     // Alertes depuis l'URL
     var params = new URLSearchParams(window.location.search);
