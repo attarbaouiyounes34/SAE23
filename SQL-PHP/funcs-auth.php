@@ -43,14 +43,14 @@ function auth($pdo, $user, $pass) {
 /**
  * Démarre ou reprend la session de manière sécurisée.
  * 
- * SÉCURITÉ (TD03 §2) :
+ * SÉCURITÉ (TD03 2) :
  * - session_name() personnalisé pour éviter le partage de cookie
  *   entre applications sur le même serveur r207.borelly.net
  * - session_regenerate_id() après login pour éviter le fixation
  */
 function initSession() {
     if (session_status() === PHP_SESSION_NONE) {
-        // Nom unique pour notre appli (TD03 §2.3)
+        // Nom unique pour notre appli (TD03 2.3)
         session_name('COFFEEBREAK_SID');
         session_start();
     }

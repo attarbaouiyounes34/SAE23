@@ -12,7 +12,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- =============================================
 -- 1. TABLE USERS
--- VARBINARY pour sensibilité à la casse (TD01 §11)
+-- VARBINARY pour sensibilité à la casse (TD01 11)
 -- passwd = SHA1 du mot de passe (non réversible)
 -- deleted_at = suppression logique (NULL = actif)
 -- =============================================

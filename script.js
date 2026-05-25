@@ -42,7 +42,6 @@ var currentProduct = null;
 var currentQty = 1;
 
 // --- DOMContentLoaded ---
-if (params.get('error') === 'bloque') showPageAlert('Trop de tentatives. Réessayez dans 15 minutes.', 'error');
 document.addEventListener('DOMContentLoaded', function () {
     // Mettre à jour l'icône du thème
     var saved = localStorage.getItem('theme') || 'light';
@@ -117,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (params.get('error') === 'champs') showPageAlert('Veuillez remplir tous les champs.', 'error');
     if (params.get('error') === 'doublon') showPageAlert("Ce nom d'utilisateur existe déjà.", 'error');
     if (params.get('error') === 'mdp') showPageAlert('Le mot de passe doit faire au moins 6 caractères.', 'error');
+    if (params.get('error') === 'bloque') showPageAlert('Trop de tentatives. Réessayez dans 15 minutes.', 'error');
 
     // Chargement des produits
     var grille = document.getElementById('grille');
